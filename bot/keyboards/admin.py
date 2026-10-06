@@ -1,0 +1,7 @@
+from aiogram.types import InlineKeyboardButton,InlineKeyboardMarkup
+def admin_menu(): return InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="📋 Заявки",callback_data="admin:leads")],[InlineKeyboardButton(text="👥 Менеджеры",callback_data="admin:managers")],[InlineKeyboardButton(text="📊 Воронка",callback_data="admin:funnel")],[InlineKeyboardButton(text="📚 Модули",callback_data="admin:modules")]])
+def lead_actions(lead_id): return InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="👁 Открыть",callback_data=f"admin:lead:{lead_id}")],[InlineKeyboardButton(text="👨‍💼 Назначить менеджера",callback_data=f"admin:assign:{lead_id}")]])
+def manager_list(lead_id,managers): return InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text=f"{m.first_name or m.username or m.telegram_id}",callback_data=f"admin:setmanager:{lead_id}:{m.id}")] for m in managers]+[[InlineKeyboardButton(text="⬅️ Назад",callback_data="admin:leads")]])
+def status_keyboard(lead_id,statuses): return InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text=s[0],callback_data=f"manager:status:{lead_id}:{s[1]}")] for s in statuses])
+def manager_lead_actions(lead_id): return InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="📋 Открыть",callback_data=f"manager:lead:{lead_id}")]])
+def meeting_actions(): return InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="🔄 Перенести",callback_data="meeting:reschedule")],[InlineKeyboardButton(text="❌ Отменить",callback_data="meeting:cancel")]])

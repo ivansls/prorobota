@@ -1,0 +1,32 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: prorobota_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: prorobota
+      POSTGRES_USER: prorobota
+      POSTGRES_PASSWORD: prorobota
+    ports: ["5432:5432"]
+    volumes: [postgres_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U prorobota -d prorobota"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  redis:
+    image: redis:7-alpine
+    container_name: prorobota_redis
+    restart: unless-stopped
+  bot:
+    build: .
+    container_name: prorobota_bot
+    restart: unless-stopped
+    env_file: [.env]
+    depends_on:
+      postgres: {condition: service_healthy}
+      redis: {condition: service_started}
+    volumes:
+      - ./credentials:/app/google_credentials:ro
+volumes:
+  postgres_data:
